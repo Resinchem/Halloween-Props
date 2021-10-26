@@ -1,5 +1,5 @@
 ### Skull Head Build
-![Thumb_Github_Goblin](https://user-images.githubusercontent.com/55962781/138798950-646fdd0b-9c38-4653-9bc3-827e466cb9ea.jpg)
+![Thumb_Github_Skull](https://user-images.githubusercontent.com/55962781/138799966-4a101207-3d32-4d2d-bfb0-f639cbda6fc5.jpg)
 
 These files are designed for the controller board built for the Skull Head.  These files **will not** work with the Goblin Head controller version. See the blog [Halloween Props with Moving Head and Sound](https://resinchemtech.blogspot.com/2021/10/halloween-props-with-moving-head-and.html) for build details and the differences between the two versions.
 
