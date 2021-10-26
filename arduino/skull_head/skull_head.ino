@@ -1,3 +1,12 @@
+/*
+====================================================================================
+Main .ino file for Skull head build as described at: 
+https://resinchemtech.blogspot.com/2021/10/halloween-props-with-moving-head-and.html
+Created by: ResinChem Tech
+License: Creative Commons Attribution-NonCommercial 4.0
+Initial creation: October 25, 2021
+====================================================================================
+*/
 #include <Servo.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -188,7 +197,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
     // Play Audio Sound
     int whichTrack = message.toInt();
     playAudio(whichTrack);
-  } 
+  } else if (strcmp(topic, MQTT_TOPIC_SUB"/audiovol") == 0) {
+    int newVol = message.toInt();
+    setAudioVolume(newVol);  
+  }
 }
 
 // ============================================
@@ -269,7 +281,15 @@ void setup() {
   #if defined(SERIAL_DEBUG) && (SERIAL_DEBUG == 1)
     Serial.println(F("DFPlayer Mini online."));
   #endif
-  myDFPlayer.volume(25);  //Set volume value. From 0 to 30 - set to 25 for production
+
+  // Assure audioVolume from Settings.h is in acceptable range or fix
+  if (audioVolume > 30) {
+    audioVolume = 30;
+  } else if (audioVolume < 0) {
+    audioVolume = 0;
+  }
+  
+  myDFPlayer.volume(audioVolume);  //Set volume value. From 0 to 30
   myDFPlayer.play(1);  //Play the first mp3
 
 // set random seed for eye blink
@@ -445,6 +465,19 @@ void blinkEyes(int blinkTime) {
   setEyeColor("black");
   delay(delayTime);
   setEyeColor(prevColor);
+}
+
+void setAudioVolume(int volume) {
+  int newVol = 0;
+  // Validate volume is in valid range 0-30
+  if (volume > 30) {
+    newVol = 30; 
+  } else if (volume < 0) {
+    newVol = 0;
+  } else {
+    newVol = volume;
+  }
+  myDFPlayer.volume(newVol);  
 }
 
 void playAudio(int trackNum) {

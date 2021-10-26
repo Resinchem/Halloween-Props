@@ -36,6 +36,7 @@ uint16_t ota_time_window = 20000;        // time to start file upload when ota_f
 // Other options
 int headPos = 90;                        // Default head postion on boot/reset - for 180 servo, 90 would be midpoint
 String eye_color_idle = "blue";          // Default boot color - also default eye color when idle (no motion) when autoMotion true
+int audioVolume = 27;                    // Audio volume 0-30
 
 bool autoMotion = true;                  // Activate on detected motion
 

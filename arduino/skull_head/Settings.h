@@ -17,7 +17,7 @@
 #define MQTTMODE 1                            // 0 = Disable MQTT, 1 = Enable (will only be enabled if WiFi mode = 1 or 2 - broker must be on same network)
 #define SERIAL_DEBUG 0                        // 0 = Disable (must be disabled if using RX/TX pins), 1 = enable
 #define MQTTCLIENT "skullhead"                // MQTT Client Name
-#define MQTT_TOPIC_SUB "cmnd/skullhead"       // Default MQTT subscribe topic
+#define MQTT_TOPIC_SUB "cmnd/skullhead"     // Default MQTT subscribe topic
 #define MQTT_TOPIC_PUB "stat/skullhead"       // Default MQTT publish topic
 #define OTA_HOSTNAME "SkullHeadOTA"           // Hostname to broadcast as port in the IDE of OTA Updates
 
@@ -34,6 +34,7 @@ uint16_t ota_time_window = 20000;        // time to start file upload when ota_f
 // Other options
 int headPos = 90;                        // Default head postion on boot/reset - for 180 servo, 90 would be midpoint
 String eye_color_idle = "green";         // Default boot color - also default eye color when idle (no motion) when autoMotion true
+int audioVolume = 27;                    // Audio volume 0-30
 
 bool autoMotion = true;                  // Activate on detected motion
 
