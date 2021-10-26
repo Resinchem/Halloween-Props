@@ -11,7 +11,7 @@ This repo contains the code and .stl files for the 3D printed parts to build two
 While similar, there are slight difference in the two builds, features and code between the two, referred to as "Skull Head" (left in the above photo) and "Goblin Head" (right in the above photo).  Common features of both are:
 
 * Motion activated or control via MQTT (MQTT optional, NOT required)
-* Can operate "standalone", without WiFi (or MQTT) connectivity
+* Can operate "standalone", without WiFi (or MQTT) connectivity, when in autoMotion mode
 * Rotating head
 * LED "eyes" with 7 different available colors
 * Change eye color based on motion (or MQTT)
