@@ -11,8 +11,8 @@
 #define LEFT_EYE_GREEN_PIN D2
 #define LEFT_EYE_BLUE_PIN D3
 #define RIGHT_EYE_RED_PIN D6
-#define RIGHT_EYE_GREEN_PIN D7
-#define RIGHT_EYE_BLUE_PIN D8
+#define RIGHT_EYE_BLUE_PIN D7
+#define RIGHT_EYE_GREEN_PIN D8
 #define RX_PIN 3                             // SERIAL_DEBUG must be 0 when using these pins!
 #define TX_PIN 1
 
@@ -29,20 +29,24 @@
 // ---------------------------------------------------------------------------------------------------------------
 // OTA Settings
 bool ota_flag = true;                    // Must leave this as true for board to broadcast port to IDE upon boot
-uint16_t ota_time_elapsed = 0;           // Counter when OTA active
 uint16_t ota_boot_time_window = 2500;    // minimum time on boot for IP address to show in IDE ports, in millisecs
 uint16_t ota_time_window = 20000;        // time to start file upload when ota_flag set to true (after initial boot), in millsecs
 
 // Other options
-int headPos = 90;                        // Default head postion on boot/reset - for 180 servo, 90 would be midpoint
+byte headPos = 90;                       // Default head postion on boot/reset - for 180 servo, 90 would be midpoint
+int step_delay = 50;                     // Delay, in milliseconds, between step moves during servo rotation (lower number = faster rotation)
 String eye_color_idle = "blue";          // Default boot color - also default eye color when idle (no motion) when autoMotion true
-int audioVolume = 27;                    // Audio volume 0-30
+byte audioVolume = 27;                   // Audio volume 0-30
 
 bool autoMotion = true;                  // Activate on detected motion
 
 // These only apply if autoMotion is true
-uint16_t head_reset_time = 15000;        // time to hold head pos before motion reset in millisecs
+uint16_t motion_reset_time = 15000;      // time to delay between motion events
+uint16_t head_reset_time = 2000;         // time to pause after head moves before returning to start pos, in millisecs
+String eye_color_active = "red";         // Default eye color when active (motion detected) 
+byte rotate_dir = 0;                     // 0 to have head rotate to the right, 1 to rotate to the left
+byte min_rotate = 30;                    // Minimum position, in degrees, when rotating to the right
+byte max_rotate = 150;                   // Maximum position, in degrees, when rotating to the left
 bool autoBlink = true;                   // Blink eyes at random interval between max and min blink times
 uint16_t blink_time_max = 10000;         // Max time between blinks when no motion in millisecs
 uint16_t blink_time_min = 3000;          // Min time between blinks when no motion in millisecs (between 0 and blink_max_time)
-String eye_color_active = "red";         // Default eye color when active (motion detected) 

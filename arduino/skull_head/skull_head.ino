@@ -26,7 +26,9 @@ Initial creation: October 25, 2021
 bool mqttConnected = false;       //Will be enabled if defined and successful connnection made.  This var should be checked upon any MQTT actin.
 long lastReconnectAttempt = 0;    //If MQTT connected lost, attempt reconnenct
 uint16_t ota_time = ota_boot_time_window;
+uint16_t ota_time_elapsed = 0;           // Counter when OTA active
 int motionState = 0;
+byte curHeadPos = 0;
 unsigned long nextRunTime = 0;
 unsigned long nextBlinkTime = 0;
 
@@ -259,7 +261,7 @@ void setup() {
 
 // Set default servo pos to middle (90 for 180 servo) 
   servo.write(headPos);
-
+  curHeadPos = headPos;
 // Test Audio
   mySoftwareSerial.begin(9600);
   #if defined(SERIAL_DEBUG) && (SERIAL_DEBUG == 1)
@@ -324,7 +326,7 @@ void loop() {
     motionState = digitalRead(MOTION_PIN);
     if (motionState == HIGH)  {
       if (millis() > nextRunTime) {
-        nextRunTime = millis() + head_reset_time;
+        nextRunTime = millis() + motion_reset_time;
         rotateHead();
       } 
     } else if (motionState == LOW) {
@@ -344,6 +346,9 @@ void loop() {
   }
 }
 
+// =============================
+//  Misc procedures
+// =============================
 void rotateHead() {
   // Called by auto-motion. Not used if autoMotion false
   int pos;
@@ -351,42 +356,51 @@ void rotateHead() {
   //turn eyes blue (during motion)
   setEyeColor("blue");
   delay(250);
-  //rotate head to the left
-  for (pos = 90; pos <= 150; pos += 5) {
-    servo.write(pos);
-    delay(50); 
+  if (rotate_dir == 0) {
+    //rotate head to the right
+    for (pos = curHeadPos; pos >= min_rotate; pos -= 5) {
+      servo.write(pos);
+      delay(step_delay); 
+    }
+  } else if (rotate_dir == 1) {
+    //rotate head to the left
+    for (pos = curHeadPos; pos <= max_rotate; pos +=5) {
+      servo.write(pos);
+      delay(step_delay);
+    }
   }
-  headPos = pos;
+  curHeadPos = pos;
+
   //turn eyes to active color
   setEyeColor(eye_color_active);
   //play audio file
   timer = millis();
   myDFPlayer.play(1);  //Play the first mp3
   //return head to center pos
-  delay(2000);
+  delay(head_reset_time);
   resetHeadPos();
 
   //reset eyes to idle color
-  setEyeColor("green");
+  setEyeColor(eye_color_idle);
 }
 
 void resetHeadPos() {
   // Called by auto-motion. Not used if autoMotion false
   int pos;
-  if (headPos > 90) {
-    for (pos = headPos; pos > 90; pos -= 5) {
+  if (headPos < curHeadPos) {
+    for (pos = curHeadPos; pos > headPos; pos -= 5) {
       servo.write(pos);
-      delay(80);
+      delay(step_delay);
     }
-  } else if (headPos < 90) {
-    for (pos = headPos; pos < 90; pos += 5) {
+  } else if (headPos > curHeadPos) {
+    for (pos = curHeadPos; pos < headPos; pos += 5) {
       servo.write(pos);
-      delay(80);
+      delay(step_delay);
     }
   }
-  //set everything to exactly 90
-  servo.write(90);
-  headPos = 90;
+  //set everything to the exact boot/start pos
+  servo.write(headPos);
+  curHeadPos = headPos;
 }
 
 void setEyeColor(String color) {
@@ -442,13 +456,13 @@ void moveHead(int degree) {
   if (headPos > finalPos) {
     for (pos = headPos; pos >= finalPos; pos -= 5) {
       servo.write(pos);
-      delay(80);
+      delay(step_delay);
     }
     headPos = pos;
   } else if (headPos < finalPos) {
     for (pos = headPos; pos <= finalPos; pos += 5) {
       servo.write(pos);
-      delay(80);
+      delay(step_delay);
     }
     headPos = pos;
   }
