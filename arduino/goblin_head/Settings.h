@@ -17,7 +17,7 @@
 #define TX_PIN 1
 
 #define WIFIMODE 2                            // 0 = Only Soft Access Point, 1 = Only connect to local WiFi network with UN/PW, 2 = Both
-#define MQTTMODE 1                            // 0 = Disable MQTT, 1 = Enable (will only be enabled if WiFi mode = 1 or 2 - broker must be on same network)
+#define MQTTMODE 0                            // 0 = Disable MQTT, 1 = Enable (will only be enabled if WiFi mode = 1 or 2 - broker must be on same network)
 #define SERIAL_DEBUG 0                        // 0 = Disable (must be disabled if using RX/TX pins), 1 = enable
 #define MQTTCLIENT "goblinhead"               // MQTT Client Name
 #define MQTT_TOPIC_SUB "cmnd/goblinhead"      // Default MQTT subscribe topic

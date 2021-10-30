@@ -188,30 +188,41 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (strcmp(topic, MQTT_TOPIC_SUB"/eyecolor") == 0) {
     setEyeColorLeft(message);
     setEyeColorRight(message);
+    updateMQTTEyeColor(message);
+    updateMQTTEyeColorLeft(message);
+    updateMQTTEyeColorRight(message);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/eyecolor-left") == 0) {
     setEyeColorLeft(message);
+    updateMQTTEyeColorLeft(message);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/eyecolor-right") == 0) {
     setEyeColorRight(message);
+    updateMQTTEyeColorRight(message);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/blink") == 0) {
     int blinkSpeed = message.toInt();
     blinkEyes(blinkSpeed);
+    updateMQTTBlinkDur(blinkSpeed);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/blink-left") == 0) {
     int blinkSpeed = message.toInt();
     blinkEyeLeft(blinkSpeed);
+    updateMQTTBlinkDur(blinkSpeed);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/blink-right") == 0) {
     int blinkSpeed = message.toInt();
     blinkEyeRight(blinkSpeed);
+    updateMQTTBlinkDur(blinkSpeed);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/movehead") == 0) {
   // Move head
     int moveTo = message.toInt();
     moveHead(moveTo);
+    updateMQTTHeadPos(moveTo);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/playsound") == 0) {
     // Play Audio Sound
     int whichTrack = message.toInt();
     playAudio(whichTrack);
+    updateMQTTAudioTrack(whichTrack);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/audiovol") == 0) {
     int newVol = message.toInt();
     setAudioVolume(newVol);  
+    updateMQTTAudioVol(newVol); 
   }
 }
 
@@ -313,7 +324,17 @@ void setup() {
 
 // set random seed for eye blink
   randomSeed(analogRead(0));  
- 
+  // Update MQTT with boot values, if enabled
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    updateMQTTEyeColor(eye_color_idle);
+    updateMQTTEyeColorLeft(eye_color_idle);
+    updateMQTTEyeColorRight(eye_color_idle);
+    updateMQTTBlinkDur(100);
+    updateMQTTHeadPos(headPos);
+    updateMQTTAudioVol(audioVolume);
+    updateMQTTAudioTrack(1);
+  #endif
+
 }
 // ==============================================
 //  MAIN LOOP HERE
@@ -627,4 +648,66 @@ String curEyeColorRight() {
   }
   return retVal;
   
+}
+
+// ============================
+// MQTT UPDATE/PUBLISH ROUTINES
+// ============================
+void updateMQTTEyeColor(String curColor) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    byte msgLen = curColor.length() + 1;
+    char outMsg[msgLen];
+    curColor.toCharArray(outMsg, msgLen);
+    client.publish(MQTT_TOPIC_PUB"/eyecolor", outMsg, true);
+  #endif
+}
+
+void updateMQTTEyeColorLeft(String curColorLeft) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    byte msgLen = curColorLeft.length() + 1;
+    char outMsg[msgLen];
+    curColorLeft.toCharArray(outMsg, msgLen);
+    client.publish(MQTT_TOPIC_PUB"/eyecolor-left", outMsg, true);
+  #endif
+}
+
+void updateMQTTEyeColorRight(String curColorRight) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    byte msgLen = curColorRight.length() + 1;
+    char outMsg[msgLen];
+    curColorRight.toCharArray(outMsg, msgLen);
+    client.publish(MQTT_TOPIC_PUB"/eyecolor-right", outMsg, true);
+  #endif
+}
+
+void updateMQTTBlinkDur(uint16_t curBlinkDur) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    char outDur[5];
+    sprintf(outDur, "%4u", curBlinkDur);
+    client.publish(MQTT_TOPIC_PUB"/blinkdur", outDur, true);
+  #endif
+}
+
+void updateMQTTHeadPos(byte currentPos) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    char outPos[4];
+    sprintf(outPos, "%3u", currentPos);
+    client.publish(MQTT_TOPIC_PUB"/headpos", outPos, true);
+  #endif
+}
+
+void updateMQTTAudioVol(byte curVolume) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    char outVol[4];
+    sprintf(outVol, "%3u", curVolume);
+    client.publish(MQTT_TOPIC_PUB"/audiovol", outVol, true);
+  #endif
+}
+
+void updateMQTTAudioTrack (byte curTrack) {
+  #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+    char outTrack[4];
+    sprintf(outTrack, "%3u", curTrack); 
+    client.publish(MQTT_TOPIC_PUB"/audiotrack", outTrack, true);
+  #endif 
 }
