@@ -32,4 +32,4 @@ The differences between the two builds are as follows:
 
 Otherwise, the feature set between the two versions are identical.
 
-### See the wiki for details on installation, settings and available MQTT topics
+### See the [wiki](https://github.com/Resinchem/Halloween-Props/wiki) for details on installation, settings and available MQTT topics
