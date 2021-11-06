@@ -4,7 +4,7 @@
 
 This repo contains the code and .stl files for the 3D printed parts to build two different NodeMCU/ESP8266-based motion-activated props with blinking LED eyes, rotating head and audio output. Alternative, the auto-motion activation can be disabled and they can be fully controlled via automation (like Home Assistant) via MQTT.
 
-### To see these in action on Halloween night, along with an overview of the build, see this YouTube video
+### To see these in action on Halloween night, along with an overview of the build, see this [YouTube video](https://youtu.be/elebVcLhq3s)
 
 #### For full build details, wiring schematics and more, see the related blog article [Halloween Props with Moving Head and Sound](https://resinchemtech.blogspot.com/2021/10/halloween-props-with-moving-head-and.html)
 
