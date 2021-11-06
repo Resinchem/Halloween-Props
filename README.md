@@ -6,7 +6,7 @@ This repo contains the code and .stl files for the 3D printed parts to build two
 
 ### To see these in action on Halloween night, along with an overview of the build, see this [YouTube video](https://youtu.be/elebVcLhq3s)
 
-#### For full build details, wiring schematics and more, see the related blog article [Halloween Props with Moving Head and Sound](https://resinchemtech.blogspot.com/2021/10/halloween-props-with-moving-head-and.html)
+#### For full build details, wiring schematics and more, see the related blog article [Halloween Props with Moving Head and Sound](https://resinchemtech.blogspot.com/2021/11/halloween-props-with-moving-head-and.html)
 
 While similar, there are slight difference in the two builds, features and code between the two, referred to as "Skull Head" (left in the above photo) and "Goblin Head" (right in the above photo).  Common features of both are:
 
