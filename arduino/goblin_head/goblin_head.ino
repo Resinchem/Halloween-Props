@@ -5,6 +5,7 @@ https://resinchemtech.blogspot.com/2021/10/halloween-props-with-moving-head-and.
 Created by: ResinChem Tech
 License: Creative Commons Attribution-NonCommercial 4.0
 Initial creation: October 25, 2021
+Updated: January 23, 2022 (v0.93)
 ====================================================================================
 */
 #include <Servo.h>
@@ -223,6 +224,31 @@ void callback(char* topic, byte* payload, unsigned int length) {
     int newVol = message.toInt();
     setAudioVolume(newVol);  
     updateMQTTAudioVol(newVol); 
+  // New MQTT Options for v0.93 - enable/disable auto-motion and auto-blink  
+  } else if (strcmp(topic, MQTT_TOPIC_SUB"/automotion") == 0) {
+    if (message == "ON") {
+      autoMotion = true;
+      #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+        client.publish(MQTT_TOPIC_PUB"/automotion", "ON", true);
+      #endif
+    } else {
+      autoMotion = false;
+      #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+        client.publish(MQTT_TOPIC_PUB"/automotion", "OFF", true);
+      #endif
+    }
+  } else if (strcmp(topic, MQTT_TOPIC_SUB"/autoblink") == 0) {
+    if (message == "ON") {
+      autoBlink = true;
+      #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+        client.publish(MQTT_TOPIC_PUB"/autoblink", "ON", true);
+      #endif
+    } else {
+      autoBlink = false;
+      #if defined(MQTTMODE) && (MQTTMODE == 1 && (WIFIMODE == 1 || WIFIMODE == 2))
+        client.publish(MQTT_TOPIC_PUB"/autoblink", "OFF", true);
+      #endif
+    }
   }
 }
 
